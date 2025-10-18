@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <vector>
 #include "Point.h"
 #include "square.h"
@@ -59,8 +59,8 @@ void Square::setName(string name)
 	this->name = name;
 }
 
-void printSquare(vector<Square> arr, int size) {
-	cout << '\n';
+void printSquare(const vector<Square> &arr, int size)
+{
 	for (int i = 0; i < size; i++) {
 		cout << arr[i].getName() << '(' << arr[i].getX() << ", "
 			<< arr[i].getY() << ") side=" << arr[i].getSide() << ", area=" << arr[i].getArea()
@@ -80,7 +80,7 @@ int main() {
 		squareArr.push_back(Square(name, x, y, side));
 	}
 
-	cout << "Squares in increasing order of area" << endl;
+	cout << "\nSquares in increasing order of area" << endl;
 	for (int i = 0; i < n; i++) {
 		for (int j = 1; j < n - i; j++) {
 			if (squareArr[j - 1].getArea() > squareArr[j].getArea()) {
@@ -92,29 +92,39 @@ int main() {
 	}
 	printSquare(squareArr, n);
 
-	cout << "Squares in increasing order of max x-coordinate" << endl;
+	vector<Square> maxArr = squareArr;
 	for (int i = 0; i < n; i++) {
-		for (int j = 1; j < n - i; j++) {
-			if (squareArr[j - 1].getX() > squareArr[j].getX()) {
-				Square temp = squareArr[j];
-				squareArr[j] = squareArr[j - 1];
-				squareArr[j - 1] = temp;
-			}
-		}
+		maxArr[i].setX(squareArr[i].getX() + squareArr[i].getSide());
 	}
-	printSquare(squareArr, n);
 
-	cout << "Squares in increasing order of max y-coordinate" << endl;
+	cout << "\nSquares in increasing order of max x-coordinate" << endl;
 	for (int i = 0; i < n; i++) {
 		for (int j = 1; j < n - i; j++) {
-			if (squareArr[j - 1].getY() > squareArr[j].getY()) {
-				Square temp = squareArr[j];
-				squareArr[j] = squareArr[j - 1];
-				squareArr[j - 1] = temp;
+			if (maxArr[j - 1].getX() > maxArr[j].getX()) {
+				Square temp = maxArr[j];
+				maxArr[j] = maxArr[j - 1];
+				maxArr[j - 1] = temp;
 			}
 		}
 	}
-	printSquare(squareArr, n);
+	printSquare(maxArr, n);
+
+	maxArr = squareArr;
+	for (int i = 0; i < n; i++) {
+		maxArr[i].setY(squareArr[i].getY() + squareArr[i].getSide());
+	}
+
+	cout << "\nSquares in increasing order of max y-coordinate" << endl;
+	for (int i = 0; i < n; i++) {
+		for (int j = 1; j < n - i; j++) {
+			if (maxArr[j - 1].getY() > maxArr[j].getY()) {
+				Square temp = maxArr[j];
+				maxArr[j] = maxArr[j - 1];
+				maxArr[j - 1] = temp;
+			}
+		}
+	}
+	printSquare(maxArr, n);
 
 	return 0;
 }
